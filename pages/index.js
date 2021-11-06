@@ -79,7 +79,9 @@ export default function Home() {
                 placeholder='Room Number'
                 register={register("roomName", { required: true })}
               />
-              {errors.roomName && <span>This field is required</span>}
+              {errors.roomName && (
+                <span className='text-red-400 m-1'>This field is required</span>
+              )}
             </div>
             <SubmitButton disabled={loading}>
               {!loading ? "참여" : "Loading..."}
