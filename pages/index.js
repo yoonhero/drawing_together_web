@@ -46,8 +46,7 @@ export default function Home() {
   }, [connected]);
 
   const onSubmit = (data) => {
-    console.log(data);
-    setLoading(true);
+    joinRoom(data?.roomName);
   };
 
   return (
