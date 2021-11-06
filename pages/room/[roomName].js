@@ -4,7 +4,7 @@ const Room = () => {
   const router = useRouter();
   const { roomName } = router.query;
 
-  return <p>Post: {pid}</p>;
+  return <p>Post: {roomName}</p>;
 };
 
 export default Room;

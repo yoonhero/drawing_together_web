@@ -4,20 +4,19 @@ import { SubmitButton } from "../components/customButton";
 import { CustomInput } from "../components/customInput";
 import { SocketContext, useSocketConnection } from "../utils/socket-context";
 import { useRouter } from "next/router";
+import { useForm } from "react-hook-form";
 
 export default function Home() {
   const router = useRouter();
   const socket = useContext(SocketContext);
   const [loading, setLoading] = useState(socket.connected);
   const connected = useSocketConnection();
-
-  const sendData = () => {
-    socket.emit("hello", "hi", "myname", "yoonhero");
-
-    socket.on("metoo", (data) => {
-      console.log(data);
-    });
-  };
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm();
 
   const joinRoom = (roomName) => {
     socket.emit("join_room", roomName);
@@ -33,8 +32,6 @@ export default function Home() {
   };
 
   useEffect(() => {
-    console.log(connected);
-
     return () => {
       socket.off();
     };
@@ -44,9 +41,14 @@ export default function Home() {
     setLoading(!connected);
 
     if (connected) {
-      sendData();
+      // joinRoom("hello");
     }
   }, [connected]);
+
+  const onSubmit = (data) => {
+    console.log(data);
+    setLoading(true);
+  };
 
   return (
     <main>
@@ -63,16 +65,25 @@ export default function Home() {
         </section>
 
         <section className='flex flex-col items-center justify-center p-5'>
-          <form className='flex flex-col items-center'>
+          <form
+            onSubmit={handleSubmit(onSubmit)}
+            className='flex flex-col items-center'>
             <div className='flex flex-col items-right  m-5 '>
               <label
                 for='roomNumber_input'
                 className='m-2 hidden text-xl font-bold text-gray-700 md:block'>
                 회의참가
               </label>
-              <CustomInput name='roomNumber_input' placeholder='Room Number' />
+              <CustomInput
+                name='roomNumber_input'
+                placeholder='Room Number'
+                register={register("roomName", { required: true })}
+              />
+              {errors.roomName && <span>This field is required</span>}
             </div>
-            <SubmitButton>참여</SubmitButton>
+            <SubmitButton disabled={loading}>
+              {!loading ? "참여" : "Loading..."}
+            </SubmitButton>
           </form>
 
           <section className='m-10 flex flex-row items-center justify-around text-xl font-semibold text-gray-700 font-sans'>
