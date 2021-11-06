@@ -1,3 +1,131 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+#wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100vw;
+  height: 100vh;
+}
+
+#canvas {
+  background-color: white;
+  border: none;
+  cursor: crosshair;
+  width: 100%;
+  height: 100%;
+}
+
+#controls {
+  background: rgb(207, 212, 214);
+  background: linear-gradient(
+    90deg,
+    rgba(207, 212, 214, 1) 0%,
+    rgba(174, 186, 189, 1) 100%
+  );
+  padding: 10px;
+  margin: 10px;
+  gap: 20px;
+  position: absolute;
+  top: 0;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+  border-radius: 20px;
+  max-width: 800px;
+}
+
+#widthControl {
+  display: flex;
+  align-items: center;
+  flex-direction: column-reverse;
+  flex-direction: row;
+}
+
+.widthExample {
+  background-color: black;
+  border-radius: 50%;
+  margin: 3px;
+  opacity: 0.4;
+}
+
+.widthExample:nth-child(1) {
+  width: 5px;
+  height: 5px;
+}
+
+.widthExample:nth-child(2) {
+  width: 10px;
+  height: 10px;
+}
+
+.widthExample:nth-child(3) {
+  width: 15px;
+  height: 15px;
+  opacity: 1;
+}
+
+.widthExample:nth-child(4) {
+  width: 20px;
+  height: 20px;
+}
+
+.widthExample:nth-child(5) {
+  width: 25px;
+  height: 25px;
+}
+
+.widthExample:hover {
+  cursor: pointer;
+  opacity: 1 !important;
+}
+
+#palette {
+  margin: 25px 0px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.colorSquare {
+  margin: 1px;
+  width: 30px;
+  height: 30px;
+  border-radius: 3px;
+  transition: all 120ms;
+}
+
+.colorSquare:hover {
+  transform: scale(1.1);
+  border-radius: 50%;
+  cursor: pointer;
+  z-index: 1;
+}
+
+#clearBtn {
+  padding: 10px;
+  font-size: 25px;
+  color: gray;
+  transition: all 400ms;
+}
+
+#clearBtn:hover {
+  color: rgb(255, 20, 20);
+  cursor: pointer;
+}
+
+#counterDiv {
+  font-size: 14px;
+  text-align: right;
+  position: absolute;
+  bottom: 5px;
+}
+
+.hidden {
+  display: none;
+}

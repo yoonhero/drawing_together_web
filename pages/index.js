@@ -9,8 +9,9 @@ import { useForm } from "react-hook-form";
 export default function Home() {
   const router = useRouter();
   const socket = useContext(SocketContext);
-  const [loading, setLoading] = useState(socket.connected);
   const connected = useSocketConnection();
+  const [loading, setLoading] = useState(connected);
+
   const {
     register,
     handleSubmit,
@@ -19,14 +20,6 @@ export default function Home() {
   } = useForm();
 
   const joinRoom = (roomName) => {
-    socket.emit("join_room", roomName);
-
-    setLoading(true);
-
-    socket.on("enter_room_success", () => {
-      setLoading(false);
-    });
-
     // enter the room
     router.push(`/room/${roomName}`);
   };
@@ -39,10 +32,6 @@ export default function Home() {
 
   useEffect(() => {
     setLoading(!connected);
-
-    if (connected) {
-      // joinRoom("hello");
-    }
   }, [connected]);
 
   const onSubmit = (data) => {
