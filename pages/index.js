@@ -1,24 +1,15 @@
 import Head from "next/head";
 import React, { useState, useEffect, useContext } from "react";
-import { SocketContext } from "../utils/socket-context";
+import { SubmitButton } from "../components/customButton";
+import { CustomInput } from "../components/customInput";
+import { SocketContext, useSocketConnection } from "../utils/socket-context";
+import { useRouter } from "next/router";
 
 export default function Home() {
+  const router = useRouter();
   const socket = useContext(SocketContext);
   const [loading, setLoading] = useState(socket.connected);
-
-  const SocketConnection = () => {
-    socket.on("connect", () => {
-      setLoading(socket.connected);
-    });
-
-    socket.on("disconnect", () => {
-      console.log(
-        "Socket Server is",
-        socket.connected ? "connected" : "disconnected"
-      );
-      setLoading(socket.connected);
-    });
-  };
+  const connected = useSocketConnection();
 
   const sendData = () => {
     socket.emit("hello", "hi", "myname", "yoonhero");
@@ -28,14 +19,35 @@ export default function Home() {
     });
   };
 
+  const joinRoom = (roomName) => {
+    socket.emit("join_room", roomName);
+
+    setLoading(true);
+
+    socket.on("enter_room_success", () => {
+      setLoading(false);
+    });
+
+    // enter the room
+    router.push(`/room/${roomName}`);
+  };
+
   useEffect(() => {
-    SocketConnection();
-    sendData();
+    console.log(connected);
 
     return () => {
       socket.off();
     };
   }, []);
+
+  useEffect(() => {
+    setLoading(!connected);
+
+    if (connected) {
+      sendData();
+    }
+  }, [connected]);
+
   return (
     <main>
       <Head>
@@ -58,20 +70,9 @@ export default function Home() {
                 className='m-2 hidden text-xl font-bold text-gray-700 md:block'>
                 회의참가
               </label>
-              <input
-                id='roomNumber_input'
-                name='roomNumber_input'
-                type='text'
-                placeholder='Room Number'
-                class='form-input shadow-md  min-w-full px-3 py-4 rounded-2xl outline-none text-3xl text-left text-gray-800 placeholder-gray-600 transition transform md:hover:scale-105 focus:outline-none active:outline-none'
-              />
+              <CustomInput name='roomNumber_input' placeholder='Room Number' />
             </div>
-
-            <button
-              type='submit'
-              className='bg-blue-800 text-white m-2 px-8 py-4 rounded-xl font-md font-sans text-2xl shadow-md md:hover:shadow-xl transition transform md:hover:scale-105'>
-              참여
-            </button>
+            <SubmitButton>참여</SubmitButton>
           </form>
 
           <section className='m-10 flex flex-row items-center justify-around text-xl font-semibold text-gray-700 font-sans'>
