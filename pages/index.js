@@ -1,6 +1,25 @@
 import Head from "next/head";
+import React, { useState, useEffect, useContext } from "react";
+import { SocketContext } from "../utils/socket-context";
 
 export default function Home() {
+  const socket = useContext(SocketContext);
+
+  const sendData = () => {
+    socket.emit("hello", "hi", "myname", "yoonhero");
+
+    socket.on("metoo", (data) => {
+      console.log(data);
+    });
+  };
+
+  useEffect(() => {
+    sendData();
+
+    return () => {
+      socket.off();
+    };
+  }, []);
   return (
     <main>
       <Head>
