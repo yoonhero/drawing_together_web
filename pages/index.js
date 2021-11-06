@@ -4,6 +4,21 @@ import { SocketContext } from "../utils/socket-context";
 
 export default function Home() {
   const socket = useContext(SocketContext);
+  const [loading, setLoading] = useState(socket.connected);
+
+  const SocketConnection = () => {
+    socket.on("connect", () => {
+      setLoading(socket.connected);
+    });
+
+    socket.on("disconnect", () => {
+      console.log(
+        "Socket Server is",
+        socket.connected ? "connected" : "disconnected"
+      );
+      setLoading(socket.connected);
+    });
+  };
 
   const sendData = () => {
     socket.emit("hello", "hi", "myname", "yoonhero");
@@ -14,6 +29,7 @@ export default function Home() {
   };
 
   useEffect(() => {
+    SocketConnection();
     sendData();
 
     return () => {
