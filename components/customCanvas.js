@@ -75,8 +75,28 @@ const Canvas = ({ roomName, lineWidth: lineW, drawColor: drawC }) => {
     setLastPos(null);
   };
 
-  function drawing(e) {
-    const [x, y] = mousePos(e);
+  const touchStart = (e) => {
+    setMousePressed(true);
+    drawing(e, true);
+  };
+
+  const touchMove = (e) => {
+    if (mousePressed) {
+      drawing(e, true);
+    }
+  };
+
+  const touchCancel = () => {
+    setLastPos(null);
+  };
+
+  const touchEnd = (e) => {
+    setMousePressed(false);
+    setLastPos(null);
+  };
+
+  function drawing(e, mobile = false) {
+    const [x, y] = mousePos(e, mobile);
     if (lastPos) {
       socket.emit("drawing", roomName, drawColor, lineWidth, lastPos, [x, y]);
       setLastPos([x, y]);
@@ -86,10 +106,22 @@ const Canvas = ({ roomName, lineWidth: lineW, drawColor: drawC }) => {
     }
   }
 
-  function mousePos(e) {
+  function mousePos(e, mobile = false) {
     if (canvasRef.current) {
       const canvas = canvasRef.current;
       const rect = canvas.getBoundingClientRect();
+
+      if (mobile) {
+        let touches = e.changedTouches;
+
+        for (let i = 0; i < touches?.length; i++) {
+          return [
+            (touches[i].clientX - rect.left) * (canvas.width / rect.width),
+            (touches[i].clientY - rect.top) * (canvas.height / rect.height),
+          ];
+        }
+      }
+
       return [
         (e.clientX - rect.left) * (canvas.width / rect.width),
         (e.clientY - rect.top) * (canvas.height / rect.height),
@@ -104,10 +136,10 @@ const Canvas = ({ roomName, lineWidth: lineW, drawColor: drawC }) => {
       onMouseMove={mouseMove}
       onMouseUp={mouseUp}
       onMouseOut={mouseOut}
-      onTouchStart={mouseDown}
-      onTouchMove={mouseMove}
-      onTouchEnd={mouseUp}
-      onTouchCancel={mouseOut}
+      onTouchStart={touchStart}
+      onTouchMove={touchMove}
+      onTouchEnd={touchEnd}
+      onTouchCancel={touchCancel}
     />
   );
 };
