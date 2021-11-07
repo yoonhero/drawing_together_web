@@ -58,7 +58,7 @@ export default function Home() {
             className='flex flex-col items-center'>
             <div className='flex flex-col items-right  m-5 '>
               <label
-                for='roomNumber_input'
+                htmlFor='roomNumber_input'
                 className='m-2 hidden text-xl font-bold text-gray-700 md:block'>
                 회의참가
               </label>
