@@ -79,7 +79,7 @@ const Room = () => {
           crossOrigin='anonymous'
         />
       </Head>
-      <div className='flex flex-col items-center justify-center w-screen h-screen'>
+      <div className='flex flex-col items-center justify-center w-screen h-screen fixed sm:gap-10'>
         {loading ? (
           "Loading..."
         ) : (
@@ -89,7 +89,7 @@ const Room = () => {
               lineWidth={lineWidth}
               drawColor={drawColor}
             />
-            <div className='absolute right-0 h-screen p-3 flex flex-col items-center justify-around bg-gray-200'>
+            <div className='fixed overflow-y-scroll  scrollbar-hide right-0 h-full p-3 flex flex-col items-center justify-around bg-gray-200'>
               <div
                 title='선 굵기 선택하기'
                 className='flex flex-col items-center justify-center m-2'>
