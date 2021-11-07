@@ -18,7 +18,7 @@ const Room = () => {
   const [lineWidth, setLineWidth] = useState(15);
   const [drawColor, setDrawColor] = useState("black");
 
-  const COLOR = [
+  const COLORS = [
     "black",
     "gray",
     "silver",
@@ -45,7 +45,7 @@ const Room = () => {
     });
 
     return () => {
-      socket.emit("disconnect", roomName);
+      socket.emit("leave_room", roomName);
       socket.off();
     };
   }, []);
@@ -78,7 +78,7 @@ const Room = () => {
           crossorigin='anonymous'
         />
       </Head>
-      <div id='wrapper'>
+      <div className='flex flex-col items-center justify-center w-screen h-screen'>
         {loading ? (
           "Loading..."
         ) : (
@@ -88,30 +88,35 @@ const Room = () => {
               lineWidth={lineWidth}
               drawColor={drawColor}
             />
-            <div id='controls'>
-              <div id='widthControl' title='choose a line width'>
+            <div className='absolute right-0 h-screen p-3 flex flex-col items-center justify-around bg-gray-200'>
+              <div
+                title='선 굵기 선택하기'
+                className='flex flex-col items-center justify-center m-2'>
                 {[1, 2, 3, 4, 5].map((w) => {
                   return (
                     <div
-                      className='widthExample'
+                      key={w}
+                      className='shadowed rounded-full transition transform hover:scale-110 hover:opacity-100'
                       style={{
                         backgroundColor: drawColor,
-                        width: w * 5,
-                        height: w * 5,
-                        opacity: `${lineWidth === w * 5 ? 1 : 0.4}`,
+                        width: w * 7,
+                        height: w * 7,
+                        margin: 1,
+                        opacity: `${lineWidth === w * 5 ? 1 : 0.3}`,
                       }}
-                      onClick={(e) => {
+                      onClick={() => {
                         setLineWidth(w * 5);
                       }}></div>
                   );
                 })}
               </div>
-              <div id='palette' title='choose a color'>
-                {COLOR.map((c) => {
+              <div title='choose a color'>
+                {COLORS.map((c) => {
                   return (
                     <div
-                      style={{ backgroundColor: c }}
-                      className='colorSquare'
+                      key={c}
+                      style={{ backgroundColor: c, margin: 2 }}
+                      className='w-8 h-8 rounded-md transform transition hover:rounded-full hover:scale-110'
                       onClick={() => {
                         setDrawColor(c);
                       }}></div>
@@ -120,8 +125,8 @@ const Room = () => {
               </div>
 
               <div
-                id='clearBtn'
-                title='clear the canvas'
+                className='text-xl transition transform opacity-80 hover:text-red-600 hover:scale-110 hover:opacity-100'
+                title='Clear Canvas'
                 onClick={() => clearCanvas()}>
                 <i className='fa fa-trash' aria-hidden='true'></i>
               </div>
