@@ -16,18 +16,30 @@ const Room = () => {
   const [socketNumber, setSocketNumber] = useState(0);
 
   const [lineWidth, setLineWidth] = useState(15);
+  const [drawColor, setDrawColor] = useState("black");
+
+  const COLOR = [
+    "black",
+    "gray",
+    "silver",
+    "white",
+    "lightblue",
+    "cyan",
+    "blue",
+    "darkblue",
+    "purple",
+    "magenta",
+    "red",
+    "orange",
+    "yellow",
+    "lime",
+    "green",
+    "olive",
+    "brown",
+    "maroon",
+  ];
 
   useEffect(() => {
-    // document.querySelectorAll(".widthExample").forEach((ex) => {
-    //   ex.addEventListener("click", () => {
-    //     lineWidth = ex.clientWidth;
-    //     document.querySelectorAll(".widthExample").forEach((other) => {
-    //       other.style.opacity = 0.4;
-    //     });
-    //     ex.style.opacity = 1;
-    //   });
-    // })
-
     socket.on("socketNumber", (number) => {
       setSocketNumber(number);
     });
@@ -71,7 +83,11 @@ const Room = () => {
           "Loading..."
         ) : (
           <>
-            <Canvas roomName={roomName} lineWidth={lineWidth} />
+            <Canvas
+              roomName={roomName}
+              lineWidth={lineWidth}
+              drawColor={drawColor}
+            />
             <div id='controls'>
               <div id='widthControl' title='choose a line width'>
                 {[1, 2, 3, 4, 5].map((w) => {
@@ -79,6 +95,7 @@ const Room = () => {
                     <div
                       className='widthExample'
                       style={{
+                        backgroundColor: drawColor,
                         width: w * 5,
                         height: w * 5,
                         opacity: `${lineWidth === w * 5 ? 1 : 0.4}`,
@@ -89,7 +106,18 @@ const Room = () => {
                   );
                 })}
               </div>
-              <div id='palette' title='choose a color'></div>
+              <div id='palette' title='choose a color'>
+                {COLOR.map((c) => {
+                  return (
+                    <div
+                      style={{ backgroundColor: c }}
+                      className='colorSquare'
+                      onClick={() => {
+                        setDrawColor(c);
+                      }}></div>
+                  );
+                })}
+              </div>
 
               <div
                 id='clearBtn'
@@ -98,10 +126,10 @@ const Room = () => {
                 <i className='fa fa-trash' aria-hidden='true'></i>
               </div>
 
-              <div id='counterDiv'>
+              {/* <div id='counterDiv'>
                 <span id='counter'>{socketNumber}</span> users <br />
                 are online
-              </div>
+              </div> */}
             </div>
           </>
         )}

@@ -1,12 +1,12 @@
 import React, { useRef, useEffect, useContext, useState } from "react";
 import { SocketContext } from "../utils/socket-context";
 
-const Canvas = ({ roomName, lineWidth: lineW }) => {
+const Canvas = ({ roomName, lineWidth: lineW, drawColor: drawC }) => {
   const socket = useContext(SocketContext);
   const canvasRef = useRef(null);
   const [mousePressed, setMousePressed] = useState(false);
   const [lastPos, setLastPos] = useState(null);
-  const [drawColor, setDrawColor] = useState("black");
+  const [drawColor, setDrawColor] = useState(drawC);
   const [lineWidth, setLineWidth] = useState(lineW);
 
   useEffect(() => {
@@ -51,24 +51,9 @@ const Canvas = ({ roomName, lineWidth: lineW }) => {
     setLineWidth(lineW);
   }, [lineW]);
 
-  // useEffect(() => {
-  //   const canvas = canvasRef.current;
-  //   const context = canvas.getContext("2d");
-  //   let frameCount = 0;
-  //   let animationFrameId;
-
-  //   //Our draw came here
-  //   const render = () => {
-  //     frameCount++;
-  //     draw(context, frameCount);
-  //     animationFrameId = window.requestAnimationFrame(render);
-  //   };
-  //   render();
-
-  //   return () => {
-  //     window.cancelAnimationFrame(animationFrameId);
-  //   };
-  // }, [draw]);
+  useEffect(() => {
+    setDrawColor(drawC);
+  }, [drawC]);
 
   const mouseDown = (e) => {
     setMousePressed(true);
