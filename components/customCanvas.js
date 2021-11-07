@@ -21,7 +21,7 @@ const Canvas = ({ roomName, lineWidth: lineW, drawColor: drawC }) => {
       const context = canvas.getContext("2d");
       context.lineCap = "round";
       context.strokeStyle = "black";
-      context.lineWidth = 5;
+      context.lineWidth = 15;
     }
 
     socket.on("clearCanvas", () => {
@@ -66,7 +66,7 @@ const Canvas = ({ roomName, lineWidth: lineW, drawColor: drawC }) => {
     }
   };
 
-  const mouseLeave = () => {
+  const mouseOut = () => {
     setLastPos(null);
   };
 
@@ -103,6 +103,11 @@ const Canvas = ({ roomName, lineWidth: lineW, drawColor: drawC }) => {
       onMouseDown={mouseDown}
       onMouseMove={mouseMove}
       onMouseUp={mouseUp}
+      onMouseOut={mouseOut}
+      onTouchStart={mouseDown}
+      onTouchMove={mouseMove}
+      onTouchEnd={mouseUp}
+      onTouchCancel={mouseOut}
     />
   );
 };
