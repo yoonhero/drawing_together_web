@@ -1,7 +1,7 @@
 import React, { createContext, useEffect, useState } from "react";
 import socketIOClient from "socket.io-client";
 
-const socket = socketIOClient(process.env.SERVER_URL || "localhost:4000");
+const socket = socketIOClient("https://togetudy.herokuapp.com/");
 
 export const SocketContext = createContext(socket);
 
