@@ -1,3 +1,4 @@
+import Head from "next/head";
 import { useRouter } from "next/router";
 import { useState, useEffect, useContext, useRef } from "react";
 import Canvas from "../../components/customCanvas";
@@ -14,16 +15,9 @@ const Room = () => {
 
   const [socketNumber, setSocketNumber] = useState(0);
 
-  useEffect(() => {
-    // document.querySelectorAll(".colorSquare").forEach((square) => {
-    //   square.addEventListener("click", () => {
-    //     drawColor = square.style.backgroundColor;
-    //     document.querySelectorAll(".widthExample").forEach((ex) => {
-    //       ex.style.backgroundColor = drawColor;
-    //     });
-    //   });
-    // });
+  const [lineWidth, setLineWidth] = useState(15);
 
+  useEffect(() => {
     // document.querySelectorAll(".widthExample").forEach((ex) => {
     //   ex.addEventListener("click", () => {
     //     lineWidth = ex.clientWidth;
@@ -39,6 +33,7 @@ const Room = () => {
     });
 
     return () => {
+      socket.emit("disconnect", roomName);
       socket.off();
     };
   }, []);
@@ -62,37 +57,56 @@ const Room = () => {
   };
 
   return (
-    <div id='wrapper'>
-      {loading ? (
-        "Loading..."
-      ) : (
-        <>
-          <Canvas roomName={roomName} />
-          <div id='controls'>
-            <div id='widthControl' title='choose a line width'>
-              <div className='widthExample'></div>
-              <div className='widthExample'></div>
-              <div className='widthExample'></div>
-              <div className='widthExample'></div>
-              <div className='widthExample'></div>
-            </div>
-            <div id='palette' title='choose a color'></div>
+    <>
+      <Head>
+        <link
+          rel='stylesheet'
+          href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css'
+          integrity='sha256-h20CPZ0QyXlBuAw7A+KluUYx/3pK+c7lYEpqLTlxjYQ='
+          crossorigin='anonymous'
+        />
+      </Head>
+      <div id='wrapper'>
+        {loading ? (
+          "Loading..."
+        ) : (
+          <>
+            <Canvas roomName={roomName} lineWidth={lineWidth} />
+            <div id='controls'>
+              <div id='widthControl' title='choose a line width'>
+                {[1, 2, 3, 4, 5].map((w) => {
+                  return (
+                    <div
+                      className='widthExample'
+                      style={{
+                        width: w * 5,
+                        height: w * 5,
+                        opacity: `${lineWidth === w * 5 ? 1 : 0.4}`,
+                      }}
+                      onClick={(e) => {
+                        setLineWidth(w * 5);
+                      }}></div>
+                  );
+                })}
+              </div>
+              <div id='palette' title='choose a color'></div>
 
-            <div
-              id='clearBtn'
-              title='clear the canvas'
-              onClick={() => clearCanvas()}>
-              <i className='fa fa-trash' aria-hidden='true'></i>
-            </div>
+              <div
+                id='clearBtn'
+                title='clear the canvas'
+                onClick={() => clearCanvas()}>
+                <i className='fa fa-trash' aria-hidden='true'></i>
+              </div>
 
-            <div id='counterDiv'>
-              <span id='counter'>{socketNumber}</span> users <br />
-              are online
+              <div id='counterDiv'>
+                <span id='counter'>{socketNumber}</span> users <br />
+                are online
+              </div>
             </div>
-          </div>
-        </>
-      )}
-    </div>
+          </>
+        )}
+      </div>
+    </>
   );
 };
 

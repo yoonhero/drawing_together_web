@@ -1,13 +1,13 @@
 import React, { useRef, useEffect, useContext, useState } from "react";
 import { SocketContext } from "../utils/socket-context";
 
-const Canvas = ({ roomName }) => {
+const Canvas = ({ roomName, lineWidth: lineW }) => {
   const socket = useContext(SocketContext);
   const canvasRef = useRef(null);
   const [mousePressed, setMousePressed] = useState(false);
   const [lastPos, setLastPos] = useState(null);
   const [drawColor, setDrawColor] = useState("black");
-  const [lineWidth, setLineWidth] = useState(15);
+  const [lineWidth, setLineWidth] = useState(lineW);
 
   useEffect(() => {
     if (canvasRef.current) {
@@ -46,6 +46,10 @@ const Canvas = ({ roomName }) => {
       }
     });
   }, []);
+
+  useEffect(() => {
+    setLineWidth(lineW);
+  }, [lineW]);
 
   // useEffect(() => {
   //   const canvas = canvasRef.current;
